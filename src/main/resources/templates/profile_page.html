@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>LMS</title>
+</head>
+<body>
+<div th:insert="~{parts/navBar::navBar}"></div>
+<div>
+    <span th:text="${userDetails.id}"></span><br>
+    <span th:text="${userDetails.email}"></span><br>
+    <span th:text="${userDetails.name}"></span><br>
+    <span th:text="${userDetails.lastName}"></span><br>
+    <span th:text="${userDetails.joined}"></span><br>
+</div>
+<h1></h1>
+</body>
+</html>
