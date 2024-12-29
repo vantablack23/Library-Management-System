@@ -21,7 +21,7 @@ public class MySecurityConfig{
         http.authorizeHttpRequests()
                 .requestMatchers("/register", "/login").permitAll() // Allow access to /register without authentication
                 .requestMatchers("/dashboard").hasAnyAuthority("READ")
-                .requestMatchers("/profile").hasAnyAuthority("WRITE")
+                .requestMatchers("/profile").hasAnyAuthority("Reader", "Librarian", "Admin")
                 .anyRequest().permitAll()
                 .and().formLogin()                      // Enable form-based login
                 .and().httpBasic()                      // Enable HTTP Basic authentication

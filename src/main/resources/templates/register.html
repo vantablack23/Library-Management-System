@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>LMS</title>
+</head>
+<body>
+<div th:insert="~{parts/navBar::navBar}"></div>
+
+<form method="post" action="/addUser" th:object="${newUser}">
+    <input type="email" placeholder="Email" name="email">
+    <input type="password" placeholder="Password" name="password">
+    <input type="text" placeholder="Name" name="name">
+    <input type="text" placeholder="Last name" name="lastName">
+    <input type="submit" value="Register">
+</form>
+
+</body>
+</html>
