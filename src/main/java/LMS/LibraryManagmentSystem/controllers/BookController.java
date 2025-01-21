@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -25,17 +26,27 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @GetMapping("/addBookPage")
+    @GetMapping("/booksManagement")
     public String getAddBookPage(Model model){
         model.addAttribute("newBook", new BookModel());
 
         List<Location> locations = locationRepository.findAll();
         model.addAttribute("locations", locations);
-        return "add_book";
+
+        return "book_management";
+    }
+
+    @GetMapping("/search/booksManagement")
+    public String searchBooksManagement(@RequestParam String query, RedirectAttributes redirectAttributes) {
+        List<Book> foundBooks = bookService.searchBooks(query);
+
+        redirectAttributes.addFlashAttribute("foundBooks", foundBooks);
+
+        return "redirect:/booksManagement";
     }
 
     @PostMapping("/addBook")
-    public String addBook(@ModelAttribute BookModel bookModel){
+    public String addBook(@ModelAttribute BookModel bookModel, RedirectAttributes redirectAttributes){
         Book newBook = new Book();
         newBook.setAuthor(bookModel.getAuthor());
         newBook.setIsbn(bookModel.getIsbn());
@@ -50,7 +61,9 @@ public class BookController {
 
         bookRepository.save(newBook);
 
-        return "redirect:/";
+        redirectAttributes.addFlashAttribute("errorBook", "Successfully added new book");
+
+        return "redirect:/booksManagement";
     }
 
     @GetMapping("/search")
@@ -62,24 +75,15 @@ public class BookController {
         return "home";
     }
 
-//    @GetMapping("/search")
-//    public List<Book> searchBooks(@RequestParam String query) {
-//
-//        return bookService.searchBooks(query);
-//    }
-
-//    @PostMapping("/book/add")
-//    public Book addBook(@RequestBody BookModel bookModel){
-//        Book newBook = new Book();
-//        newBook.setAuthor(bookModel.getAuthor());
-//        newBook.setIsbn(bookModel.getIsbn());
-//        newBook.setDescription(bookModel.getDescription());
-//        newBook.setPublisher(bookModel.getPublisher());
-//        newBook.setTitle(bookModel.getTitle());
-//        newBook.setNumOfPages(bookModel.getNumOfPages());
-//
-//        Location location = locationRepository.findById(bookModel.getLocation()).orElse(null);
-//        newBook.setLocation(location);
-//        return bookRepository.save(newBook);
-//    }
+    @GetMapping("/deleteBook/{bookId}")
+    public String deleteBook(@PathVariable Long bookId, RedirectAttributes redirectAttributes){
+        try{
+            bookRepository.deleteById(bookId);
+            redirectAttributes.addFlashAttribute("errorDeleteBook", "Book was successfully deleted");
+        }
+        catch (Exception e){
+            redirectAttributes.addFlashAttribute("errorDeleteBook", "Can not delete book when borrowed");
+        }
+        return "redirect:/booksManagement";
+    }
 }

@@ -26,7 +26,7 @@ public class Book {
     private int numOfPages;
     private boolean available;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Loan> loans;
 
