@@ -33,9 +33,15 @@ public class HomeController {
         User user = userDetails.get();
         model.addAttribute("userDetails", user);
 
-        List<Loan> loans = loanRepository.findByUser_Id(user.getId());
-        model.addAttribute("userLoans", loans);
+        if(user.getAuthority().getAuthority().equals("Librarian")){
+            model.addAttribute("readers", userRepository.findUsersWithAuthority("Reader"));
+            return "librarian_profile_page";
+        }
+        else {
+            List<Loan> loans = loanRepository.findByUser_Id(user.getId());
+            model.addAttribute("userLoans", loans);
 
-        return "profile_page";
+            return "profile_page";
+        }
     }
 }

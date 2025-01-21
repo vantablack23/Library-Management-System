@@ -24,6 +24,7 @@ public class Book {
     private String publisher;
     private String description;
     private int numOfPages;
+    private boolean available;
 
     @OneToMany(mappedBy = "book")
     @JsonIgnore

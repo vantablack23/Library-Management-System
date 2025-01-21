@@ -7,5 +7,44 @@
 <body>
 <div th:insert="~{parts/navBar::navBar}"></div>
 <h1>Library Managmement System</h1>
+
+<form method="get" action="/search">
+    <input type="text" name="query" placeholder="Search">
+    <input type="submit" value="Search">
+</form>
+
+<div>
+    <table>
+        <tr>
+            <th>ID of book</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Description</th>
+            <th>ISBN</th>
+            <th>Pages</th>
+            <th>Publisher</th>
+            <th>Location</th>
+            <th>Available</th>
+        </tr>
+        <th:block th:each="book : ${foundBooks}">
+            <tr>
+                <td th:text="${book.id}"></td>
+                <td th:text="${book.title}"></td>
+                <td th:text="${book.author}"></td>
+                <td th:text="${book.description}"></td>
+                <td th:text="${book.isbn}"></td>
+                <td th:text="${book.numOfPages}"></td>
+                <td th:text="${book.publisher}"></td>
+                <td th:text="${book.location.location}"></td>
+
+                <td>
+                    <span th:if="${book.available}">Yes</span>
+                    <span th:unless="${book.available}">No</span>
+                </td>
+            </tr>
+        </th:block>
+    </table>
+</div>
+
 </body>
 </html>

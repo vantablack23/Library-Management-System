@@ -10,10 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -31,15 +30,41 @@ public class LoanController {
     @Autowired
     private LoanRepository loanRepository;
 
+
     @PostMapping("/addLoan")
-    public String addLoan(@RequestBody LoanModel loanModel){
-        loanService.saveLoan(loanModel);
-        return "home";
+    public String addLoan(@ModelAttribute LoanModel newLoan, Model model){
+        String error = loanService.saveLoan(newLoan);
+        if(!error.isEmpty()){
+            model.addAttribute("errorMessage", error);
+            model.addAttribute("newLoan", newLoan);
+            return "add_loan";
+        }
+        return "redirect:/librarian/user/profile/"+newLoan.getUser();
+    }
+
+    @GetMapping("/returnLoan")
+    public String returnLoan(@RequestParam String bookId, RedirectAttributes redirectAttributes){
+
+        String error = loanService.returnLoan(Long.parseLong(bookId));
+
+        redirectAttributes.addFlashAttribute("error", error);
+
+
+        return "redirect:/profile";
     }
 
     @GetMapping("/loans/user/{userId}")
     public ResponseEntity<List<Loan>> listLoans(@PathVariable long userId){
         return new ResponseEntity<>(loanRepository.findByUser_Id(userId), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/librarian/user/profile/{id}/add_loan_page")
+    public String addLoanPage(Model model, @PathVariable long id){
+        LoanModel newLoan = new LoanModel();
+        newLoan.setUser(id);
+        model.addAttribute("newLoan", newLoan);
+        return "add_loan";
     }
 
 }

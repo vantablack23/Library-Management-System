@@ -5,12 +5,11 @@ import LMS.LibraryManagmentSystem.entity.Book;
 import LMS.LibraryManagmentSystem.entity.Location;
 import LMS.LibraryManagmentSystem.repositories.BookRepository;
 import LMS.LibraryManagmentSystem.repositories.LocationRepository;
+import LMS.LibraryManagmentSystem.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +21,9 @@ public class BookController {
 
     @Autowired
     private LocationRepository locationRepository;
+
+    @Autowired
+    private BookService bookService;
 
     @GetMapping("/addBookPage")
     public String getAddBookPage(Model model){
@@ -41,6 +43,7 @@ public class BookController {
         newBook.setPublisher(bookModel.getPublisher());
         newBook.setTitle(bookModel.getTitle());
         newBook.setNumOfPages(bookModel.getNumOfPages());
+        newBook.setAvailable(true);
 
         Location location = locationRepository.findById(bookModel.getLocation()).orElse(null);
         newBook.setLocation(location);
@@ -49,6 +52,21 @@ public class BookController {
 
         return "redirect:/";
     }
+
+    @GetMapping("/search")
+    public String searchBooks(@RequestParam String query, Model model) {
+        List<Book> foundBooks = bookService.searchBooks(query);
+
+        model.addAttribute("foundBooks", foundBooks);
+
+        return "home";
+    }
+
+//    @GetMapping("/search")
+//    public List<Book> searchBooks(@RequestParam String query) {
+//
+//        return bookService.searchBooks(query);
+//    }
 
 //    @PostMapping("/book/add")
 //    public Book addBook(@RequestBody BookModel bookModel){

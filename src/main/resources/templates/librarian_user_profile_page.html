@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>LMS</title>
+</head>
+<body>
+<div th:insert="~{parts/navBar::navBar}"></div>
+<div>
+    <span th:text="${reader.id}"></span><br>
+    <span th:text="${reader.email}"></span><br>
+    <span th:text="${reader.name}"></span><br>
+    <span th:text="${reader.lastName}"></span><br>
+    <span th:text="${reader.joined}"></span><br>
+</div>
+
+<a class="navLink" th:href="@{/librarian/user/profile/{id}/add_loan_page(id=${reader.id})}">Add loan</a>
+
+<div>
+    <table>
+        <tr>
+            <th>ID of book</th>
+            <th>Book's title</th>
+            <th>Rental date</th>
+            <th>Return date</th>
+            <th>Status</th>
+        </tr>
+        <th:block th:each="loan : ${userLoans}">
+            <tr>
+                <td th:text="${loan.book.id}"></td>
+                <td th:text="${loan.book.title}"></td>
+                <td th:text="${loan.timestamp}"></td>
+                <td th:text="${loan.returnDate}"></td>
+                <td th:text="${loan.status.status}"></td>
+            </tr>
+        </th:block>
+    </table>
+</div>
+
+<h1></h1>
+</body>
+</html>

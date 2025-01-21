@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>LMS</title>
+</head>
+<body>
+<div th:insert="~{parts/navBar::navBar}"></div>
+<div>
+    <span th:text="${userDetails.id}"></span><br>
+    <span th:text="${userDetails.email}"></span><br>
+    <span th:text="${userDetails.name}"></span><br>
+    <span th:text="${userDetails.lastName}"></span><br>
+    <span th:text="${userDetails.joined}"></span><br>
+</div>
+
+<form method="get" action="/reader/search">
+    <input type="text" name="query" placeholder="Search">
+    <input type="submit" value="Search">
+</form>
+
+<div>
+    <table>
+        <tr>
+            <th>User's ID</th>
+            <th>Name</th>
+            <th>Second name</th>
+            <th>Profile</th>
+        </tr>
+        <th:block th:each="reader : ${readers}">
+            <tr>
+                <td th:text="${reader.id}"></td>
+                <td th:text="${reader.name}"></td>
+                <td th:text="${reader.lastName}"></td>
+                <td><a class="navLink" th:href="@{/librarian/user/profile/{id}(id=${reader.id})}">Profile</a></td>
+            </tr>
+        </th:block>
+    </table>
+</div>
+
+<span>Return book</span>
+<form method="get" action="/returnLoan">
+    <input type="text" name="bookId" placeholder="Book ID">
+    <input type="submit" value="Return">
+</form>
+<div th:if="${error}" style="color: red; font-weight: bold;">
+    <p th:text="${error}"></p>
+</div>
+<h1></h1>
+</body>
+</html>
