@@ -47,7 +47,7 @@ public class LoanController {
 
         String error = loanService.returnLoan(Long.parseLong(bookId));
 
-        redirectAttributes.addFlashAttribute("error", error);
+        redirectAttributes.addFlashAttribute("errorLoan", error);
 
 
         return "redirect:/profile";

@@ -1,5 +1,6 @@
 package LMS.LibraryManagmentSystem.controllers;
 
+import LMS.LibraryManagmentSystem.Models.LocationModel;
 import LMS.LibraryManagmentSystem.entity.Loan;
 import LMS.LibraryManagmentSystem.repositories.LoanRepository;
 import LMS.LibraryManagmentSystem.repositories.UserRepository;
@@ -22,6 +23,7 @@ public class HomeController {
     @Autowired
     private LoanRepository loanRepository;
 
+
     @GetMapping("/")
     public String getHomePage(){
         return "home";
@@ -35,6 +37,7 @@ public class HomeController {
 
         if(user.getAuthority().getAuthority().equals("Librarian")){
             model.addAttribute("readers", userRepository.findUsersWithAuthority("Reader"));
+            model.addAttribute("newLocation", new LocationModel());
             return "librarian_profile_page";
         }
         else {

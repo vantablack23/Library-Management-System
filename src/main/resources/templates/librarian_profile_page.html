@@ -40,12 +40,23 @@
 
 <span>Return book</span>
 <form method="get" action="/returnLoan">
-    <input type="text" name="bookId" placeholder="Book ID">
+    <input type="text" name="bookId" placeholder="Book ID" required>
     <input type="submit" value="Return">
 </form>
-<div th:if="${error}" style="color: red; font-weight: bold;">
-    <p th:text="${error}"></p>
+<div th:if="${errorLoan}" style="color: red; font-weight: bold;">
+    <p th:text="${errorLoan}"></p>
 </div>
+
+<span>Add location</span>
+<form method="post" action="/addLocation" th:object="${newLocation}">
+    <input type="text" name="location" placeholder="Location's name" required>
+    <input type="submit" value="Add location">
+</form>
+<div th:if="${errorLocation}" style="color: red; font-weight: bold;">
+    <p th:text="${errorLocation}"></p>
+</div>
+
+
 <h1></h1>
 </body>
 </html>
