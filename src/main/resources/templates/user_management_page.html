@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:insert="~{parts/navBar::navBar}"></div>
+
+<form method="get" action="/userManagementPage/search">
+    <input type="text" name="query" placeholder="Search">
+    <input type="submit" value="Search">
+</form>
+<div th:if="${errorUpdateAuthority}" style="color: red; font-weight: bold;">
+    <p th:text="${errorUpdateAuthority}"></p>
+</div>
+<div th:if="${errorDeleteUser}" style="color: red; font-weight: bold;">
+    <p th:text="${errorDeleteUser}"></p>
+</div>
+<div>
+    <table>
+        <tr>
+            <th>User's ID</th>
+            <th>Name</th>
+            <th>Second name</th>
+            <th>Email</th>
+        </tr>
+        <th:block th:each="user : ${users}">
+            <tr>
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.lastName}"></td>
+                <td th:text="${user.email}"></td>
+                <td>
+                    <form method="post" th:action="@{'/userManagementPage/updateUser/'+${user.id}}">
+                        <input type="radio" id="reader" name="authority" value="1" th:checked="${user.authority.id == 1}">
+                        <label for="reader">Reader</label><br>
+                        <input type="radio" id="librarian" name="authority" value="2" th:checked="${user.authority.id == 2}">
+                        <label for="librarian">Librarian</label><br>
+                        <input type="radio" id="admin" name="authority" value="3" th:checked="${user.authority.id == 3}">
+                        <label for="admin">Admin</label>
+                        <input type="submit" value="Change authority">
+                    </form>
+                </td>
+                <td><a class="navLink" th:href="@{'/userManagementPage/deleteUser/'+${user.id}}">Delete</a></td>
+            </tr>
+        </th:block>
+    </table>
+</div>
+</body>
+</html>

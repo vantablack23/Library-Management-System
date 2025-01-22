@@ -25,4 +25,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("authority") String authority,
             @Param("searchString") String searchString);
 
+    @Query("SELECT u FROM User u WHERE " +
+            "(CAST(u.id AS string) LIKE CONCAT('%', :searchString, '%') OR " +
+            "LOWER(CONCAT(u.name, ' ', u.lastName)) LIKE LOWER(CONCAT('%', :searchString, '%')))")
+    List<User> findUsersByIdOrFullNameContaining(
+            @Param("searchString") String searchString);
+
 }

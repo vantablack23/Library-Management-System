@@ -8,14 +8,14 @@
 <div th:insert="~{parts/navBar::navBar}"></div>
 
 <form method="post" action="/addBook" th:object="${newBook}">
-    <input type="text" placeholder="Author" name="author">
-    <input type="text" placeholder="ISBN" name="isbn">
-    <input type="text" placeholder="Description" name="description">
-    <input type="text" placeholder="Publisher" name="publisher">
-    <input type="text" placeholder="Title" name="title">
+    <input type="text" placeholder="Author" name="author" required>
+    <input type="text" placeholder="ISBN" name="isbn" required>
+    <input type="text" placeholder="Description" name="description" required>
+    <input type="text" placeholder="Publisher" name="publisher" required>
+    <input type="text" placeholder="Title" name="title" required>
     <input type="number" placeholder="Pages" name="numOfPages">
 
-    <select name="location">
+    <select name="location" required>
         <th:block th:each="location : ${locations}">
             <option th:value="${location.id}" th:text="${location.location}"></option>
         </th:block>

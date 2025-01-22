@@ -1,0 +1,53 @@
+<div class="adminPanel" th:fragment="adminPanel">
+    <div>
+        <span th:text="${userDetails.id}"></span><br>
+        <span th:text="${userDetails.email}"></span><br>
+        <span th:text="${userDetails.name}"></span><br>
+        <span th:text="${userDetails.lastName}"></span><br>
+        <span th:text="${userDetails.joined}"></span><br>
+    </div>
+
+    <form method="get" action="/reader/search">
+        <input type="text" name="query" placeholder="Search">
+        <input type="submit" value="Search">
+    </form>
+
+    <div>
+        <table>
+            <tr>
+                <th>User's ID</th>
+                <th>Name</th>
+                <th>Second name</th>
+                <th>Profile</th>
+            </tr>
+            <th:block th:each="reader : ${readers}">
+                <tr>
+                    <td th:text="${reader.id}"></td>
+                    <td th:text="${reader.name}"></td>
+                    <td th:text="${reader.lastName}"></td>
+                    <td><a class="navLink" th:href="@{/librarian/user/profile/{id}(id=${reader.id})}">Profile</a></td>
+                </tr>
+            </th:block>
+        </table>
+    </div>
+
+    <span>Return book</span>
+    <form method="get" action="/returnLoan">
+        <input type="text" name="bookId" placeholder="Book ID" required>
+        <input type="submit" value="Return">
+    </form>
+    <div th:if="${errorLoan}" style="color: red; font-weight: bold;">
+        <p th:text="${errorLoan}"></p>
+    </div>
+
+    <span>Add location</span>
+    <form method="post" action="/addLocation" th:object="${newLocation}">
+        <input type="text" name="location" placeholder="Location's name" required>
+        <input type="submit" value="Add location">
+    </form>
+    <div th:if="${errorLocation}" style="color: red; font-weight: bold;">
+        <p th:text="${errorLocation}"></p>
+    </div>
+
+    <a href="/booksManagement">Manage books</a>
+</div>

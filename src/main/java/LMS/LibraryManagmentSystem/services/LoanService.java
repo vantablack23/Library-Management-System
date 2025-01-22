@@ -3,12 +3,14 @@ package LMS.LibraryManagmentSystem.services;
 import LMS.LibraryManagmentSystem.Models.LoanModel;
 import LMS.LibraryManagmentSystem.entity.Book;
 import LMS.LibraryManagmentSystem.entity.Loan;
+import LMS.LibraryManagmentSystem.entity.Status;
 import LMS.LibraryManagmentSystem.entity.User;
 import LMS.LibraryManagmentSystem.repositories.BookRepository;
 import LMS.LibraryManagmentSystem.repositories.LoanRepository;
 import LMS.LibraryManagmentSystem.repositories.StatusRepository;
 import LMS.LibraryManagmentSystem.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -76,5 +78,18 @@ public class LoanService
         loanRepository.save(loan);
 
         return "Book returned successfully";
+    }
+
+    @Scheduled(fixedRate = 60000)
+    public void checkAndUpdateOverdueLoans() {
+        LocalDateTime now = LocalDateTime.now();
+
+        List<Loan> overdueLoans = loanRepository.findByReturnDateBeforeAndStatusNameNot(now, "3");
+        System.out.println("Checking if books are overdue");
+        for (Loan loan : overdueLoans) {
+            Status status = statusRepository.findById(Long.parseLong("3")).orElse(null);
+            loan.setStatus(status);
+            loanRepository.save(loan);
+        }
     }
 }

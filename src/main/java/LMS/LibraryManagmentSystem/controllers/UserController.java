@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -94,6 +95,34 @@ public class UserController {
         return "librarian_profile_page";
     }
 
+    @GetMapping("/userManagementPage")
+    public String userManagementPage(Model model){
+        List<User> users = userRepository.findAll();
+        model.addAttribute("users", users);
+        return "user_management_page";
+    }
+
+    @GetMapping("/userManagementPage/search")
+    public String searchUsers(@RequestParam String query, Model model) {
+        List<User> users = userService.searchUsers("",query);
+        model.addAttribute("users", users);
+
+        return "user_management_page";
+    }
+
+    @PostMapping("/userManagementPage/updateUser/{userId}")
+    public String updateUserAuthority(@PathVariable Long userId, @RequestParam String authority, RedirectAttributes redirectAttributes){
+
+        try {
+            userService.updateUserAuthority(userId, authority);
+            redirectAttributes.addFlashAttribute("errorUpdateAuthority", "User's authority was successfully updated");
+        }
+        catch (Exception e){
+            redirectAttributes.addFlashAttribute("errorUpdateAuthority", "Failed to update user's authority");
+        }
+        return "redirect:/userManagementPage";
+    }
+
     @GetMapping("/librarian/user/profile/{id}")
     public String userProfileForLibrarian(@PathVariable Long id, Model model){
         Optional<User> user = userRepository.findById(id);
@@ -106,15 +135,16 @@ public class UserController {
         return "librarian_user_profile_page";
     }
 
-//    @GetMapping("/loanedBooks")
-//    public ResponseEntity<Optional<Book>> getLoanedBooks(Authentication authentication){
-//        User user = userRepository.findByEmail(authentication.getName()).get();
-//
-//    }
-
-//    @GetMapping("/getUser")
-//    public Object getCurrentUser(Authentication authentication) {
-//        return new ResponseEntity<>(userService.getLoggedUser(authentication), HttpStatus.OK);
-//    }
+    @GetMapping("/userManagementPage/deleteUser/{userId}")
+    public String deleteUser(@PathVariable Long userId, RedirectAttributes redirectAttributes){
+        try{
+            userRepository.deleteById(userId);
+            redirectAttributes.addFlashAttribute("errorDeleteUser", "User was successfully deleted");
+        }
+        catch (Exception e){
+            redirectAttributes.addFlashAttribute("errorDeleteUser", "Failed to delete user");
+        }
+        return "redirect:/userManagementPage";
+    }
 
 }

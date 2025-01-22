@@ -28,6 +28,9 @@ public class BookController {
 
     @GetMapping("/booksManagement")
     public String getAddBookPage(Model model){
+        List<Book> foundBooks = bookService.searchBooks("");
+        model.addAttribute("foundBooks", foundBooks);
+
         model.addAttribute("newBook", new BookModel());
 
         List<Location> locations = locationRepository.findAll();
@@ -37,12 +40,17 @@ public class BookController {
     }
 
     @GetMapping("/search/booksManagement")
-    public String searchBooksManagement(@RequestParam String query, RedirectAttributes redirectAttributes) {
+    public String searchBooksManagement(@RequestParam String query, Model model) {
+        model.addAttribute("newBook", new BookModel());
+
+        List<Location> locations = locationRepository.findAll();
+        model.addAttribute("locations", locations);
+
         List<Book> foundBooks = bookService.searchBooks(query);
 
-        redirectAttributes.addFlashAttribute("foundBooks", foundBooks);
+        model.addAttribute("foundBooks", foundBooks);
 
-        return "redirect:/booksManagement";
+        return "book_management";
     }
 
     @PostMapping("/addBook")

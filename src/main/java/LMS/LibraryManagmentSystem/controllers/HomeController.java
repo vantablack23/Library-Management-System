@@ -49,8 +49,16 @@ public class HomeController {
             model.addAttribute("locations", locations);
 
             return "librarian_profile_page";
-        }
-        else {
+        } else if (user.getAuthority().getAuthority().equals("Admin")) {
+            model.addAttribute("readers", userRepository.findUsersWithAuthority("Reader"));
+            model.addAttribute("newLocation", new LocationModel());
+            model.addAttribute("newBook", new BookModel());
+
+            List<Location> locations = locationRepository.findAll();
+            model.addAttribute("locations", locations);
+
+            return "admin_profile_page";
+        } else {
             List<Loan> loans = loanRepository.findByUser_Id(user.getId());
             model.addAttribute("userLoans", loans);
 

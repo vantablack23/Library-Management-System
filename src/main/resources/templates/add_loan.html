@@ -8,7 +8,7 @@
 <div th:insert="~{parts/navBar::navBar}"></div>
 
 <form method="post" action="/addLoan" th:object="${newLoan}">
-    <input type="number" placeholder="Book ID" name="book">
+    <input type="number" placeholder="Book ID" name="book" required>
     <input type="hidden" th:name="user" th:value="${newLoan.user}">
     <input type="submit" value="Add loan">
 </form>

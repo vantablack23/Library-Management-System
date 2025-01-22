@@ -26,7 +26,7 @@ public class User {
 
     private LocalDate joined;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Loan> loans;
 
