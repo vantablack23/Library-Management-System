@@ -70,8 +70,15 @@ public class UserController {
     }
 
     @PostMapping("/addUser")
-    public String addUser(@ModelAttribute UserModel userModel){
+    public String addUser(@ModelAttribute UserModel userModel, RedirectAttributes redirectAttributes){
         User newUser = new User();
+
+        Optional<User> checkEmail = userRepository.findByEmail(userModel.getEmail());
+        if(checkEmail.isPresent()){
+            redirectAttributes.addFlashAttribute("errorAddUser", "User with given email already exists");
+            return "redirect:/addUserPage";
+        }
+
         newUser.setEmail(userModel.getEmail());
         newUser.setPassword(passwordEncoder.encode(userModel.getPassword()));
         newUser.setAuthority(authorityRepository.findById(Long.parseLong("1")).orElse(null));
@@ -92,6 +99,11 @@ public class UserController {
         List<User> readers = userService.searchUsers("Reader", query);
         model.addAttribute("readers", readers);
 
+        if(user.getAuthority().getAuthority().equals("Librarian")){
+            return "librarian_profile_page";
+        } else if (user.getAuthority().getAuthority().equals("Admin")) {
+            return "admin_profile_page";
+        }
         return "librarian_profile_page";
     }
 

@@ -1,53 +1,124 @@
-<div class="adminPanel" th:fragment="adminPanel">
-    <div>
-        <span th:text="${userDetails.id}"></span><br>
-        <span th:text="${userDetails.email}"></span><br>
-        <span th:text="${userDetails.name}"></span><br>
-        <span th:text="${userDetails.lastName}"></span><br>
-        <span th:text="${userDetails.joined}"></span><br>
+<div class="adminPanel container" th:fragment="adminPanel">
+    <div class="container">
+        <div class="row">
+            <div class="col-4 col-md-2 fw-bold">User Id:</div>
+            <div class="col-8 col-md-10">
+                <span th:text="${userDetails.id}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-md-2 fw-bold">Email:</div>
+            <div class="col-8 col-md-10">
+                <span th:text="${userDetails.email}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-md-2 fw-bold">Name:</div>
+            <div class="col-8 col-md-10">
+                <span th:text="${userDetails.name}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-md-2 fw-bold">Last name:</div>
+            <div class="col-8 col-md-10">
+                <span th:text="${userDetails.lastName}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-md-2 fw-bold">Joined on:</div>
+            <div class="col-8 col-md-10">
+                <span th:text="${userDetails.joined}"></span>
+            </div>
+        </div>
     </div>
 
-    <form method="get" action="/reader/search">
-        <input type="text" name="query" placeholder="Search">
-        <input type="submit" value="Search">
-    </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center p-3">
+                <a href="/booksManagement"><button class="btn btn-primary">Manage books</button></a>
+            </div>
+        </div>
 
-    <div>
-        <table>
-            <tr>
-                <th>User's ID</th>
-                <th>Name</th>
-                <th>Second name</th>
-                <th>Profile</th>
-            </tr>
-            <th:block th:each="reader : ${readers}">
-                <tr>
-                    <td th:text="${reader.id}"></td>
-                    <td th:text="${reader.name}"></td>
-                    <td th:text="${reader.lastName}"></td>
-                    <td><a class="navLink" th:href="@{/librarian/user/profile/{id}(id=${reader.id})}">Profile</a></td>
-                </tr>
-            </th:block>
-        </table>
+        <div class="row">
+            <div class="col-12 col-lg-6 p-3">
+                <p class="fw-bold text-centered">Create loan</p>
+                <form method="get" action="/reader/search">
+                    <div class="mb-3">
+                        <label for="searchbar" class="form-label">Search for user</label>
+                        <input type="text" class="form-control" id="searchbar" name="query">
+                        <div id="emailHelp" class="form-text">Search by name or Id</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+                <div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">User's ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Second name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <th:block th:each="reader : ${readers}">
+                                <tr>
+                                    <th scope="row" th:text="${reader.id}"></th>
+                                    <td th:text="${reader.name}"></td>
+                                    <td th:text="${reader.lastName}"></td>
+                                    <td><a class="navLink" th:href="@{/librarian/user/profile/{id}(id=${reader.id})}"><button class="btn btn-primary">Profile</button></a></td>
+                                    <td><a class="navLink" th:href="@{/librarian/user/profile/{id}/add_loan_page(id=${reader.id})}"><button class="btn btn-primary">Add loan</button></a></td>
+                                </tr>
+                            </th:block>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <div class="p-3 mb-2">
+                    <p class="fw-bold">Return book</p>
+<!--                    <form method="get" action="/returnLoan">-->
+<!--                        <input type="text" name="bookId" placeholder="Book ID" required>-->
+<!--                        <input type="submit" value="Return">-->
+<!--                    </form>-->
+                    <form method="get" action="/returnLoan">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="searchbar" name="bookId" placeholder="Book ID" required>
+                            <div id="emailHelp" class="form-text">Enter Id of book to return</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Return</button>
+                    </form>
+                    <div th:if="${errorLoan}" style="color: red; font-weight: bold;">
+                        <p th:text="${errorLoan}"></p>
+                    </div>
+                </div>
+                <div class="p-3">
+                    <p class="fw-bold">Add location</p>
+<!--                    <form method="post" action="/addLocation" th:object="${newLocation}">-->
+<!--                        <input type="text" name="location" placeholder="Location's name" required>-->
+<!--                        <input type="submit" value="Add location">-->
+<!--                    </form>-->
+                    <form method="post" action="/addLocation" th:object="${newLocation}">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="searchbar" name="location" placeholder="Location's name" required>
+                            <div id="emailHelp" class="form-text">Enter new location's name</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                    <div th:if="${errorLocation}" style="color: red; font-weight: bold;">
+                        <p th:text="${errorLocation}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <span>Return book</span>
-    <form method="get" action="/returnLoan">
-        <input type="text" name="bookId" placeholder="Book ID" required>
-        <input type="submit" value="Return">
-    </form>
-    <div th:if="${errorLoan}" style="color: red; font-weight: bold;">
-        <p th:text="${errorLoan}"></p>
-    </div>
 
-    <span>Add location</span>
-    <form method="post" action="/addLocation" th:object="${newLocation}">
-        <input type="text" name="location" placeholder="Location's name" required>
-        <input type="submit" value="Add location">
-    </form>
-    <div th:if="${errorLocation}" style="color: red; font-weight: bold;">
-        <p th:text="${errorLocation}"></p>
-    </div>
 
-    <a href="/booksManagement">Manage books</a>
+
+
+
+
+
+
 </div>

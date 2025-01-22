@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>LMS</title>
-</head>
+<head th:replace="~{parts/head :: head}"></head>
 <body>
 
-<div th:insert="~{parts/navBar::navBar}"></div>
+<div th:insert="~{parts/navBar::nav}"></div>
+<div class="container">
 <div th:insert="~{parts/admin_librarian_panel::adminPanel}"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</div>
 </body>
 </html>
